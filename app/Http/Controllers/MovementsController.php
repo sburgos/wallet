@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Movements;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class MovementsController extends Controller
 {
-    public function __invoke(Request $request)
+    public function store(Request $request) : RedirectResponse
     {
         if($request->sum == 'decrease') {
             $request->amount *= -1;
@@ -18,14 +20,16 @@ class MovementsController extends Controller
         $movements->description = $request->description;
         $movements->amount = $request->amount * 100;
         $movements->type = $request->type;
+        $movements->wallets_id = $request->walletId;
+        $movements->done_date = Carbon::parse($request->done_date, 'America/Lima')->utc()->toDateTimeString();
         $movements->save();
 
         return back();
     }
 
-    public function all()
+    public function __invoke(Request $request) : View
     {
-        $movements = Movements::orderByDesc('id')->get();
+        $movements = Movements::where('wallets_id', $request->walletId)->orderByDesc('done_date')->get();
 
         $total = 0;
         $spent = 0;
@@ -41,7 +45,8 @@ class MovementsController extends Controller
         $daysUntilEndMonth = Carbon::today('America/Lima')->diffInDays(Carbon::now('America/Lima')->endOfMonth());
         $daysUntilToday = $daysInMonth - $daysUntilEndMonth - 1;
 
-        return view('home', [
+        return view('movements', [
+            'id' => $request->walletId,
             'movements' => $movements,
             'today' => round(($daily*$daysUntilToday - $spent + $daily) / 100, 2),
         ]);

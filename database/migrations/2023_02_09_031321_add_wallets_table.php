@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('movements', function (Blueprint $table) {
+        Schema::create('wallets', function (Blueprint $table) {
             $table->id();
-            $table->string('description');
-            $table->integer('amount');
-            $table->string('type');
+            $table->string('name');
+            $table->enum('type', ['budget', 'goal']);
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::drop('movements');
+        //
     }
 };

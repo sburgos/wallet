@@ -1,8 +1,11 @@
-@extends('layouts.app')
-@section('today', $today)
-@section('content')
+<x-layout>
+    <header class="py-10">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold tracking-tight text-white">Hoy puedes gastar S/{{ $today }}</h1>
+        </div>
+    </header>
     <div class="mx-auto bg-white rounded mb-10 p-10">
-        <form method="post" action="{{ route('movements.store') }}">
+        <form method="post" action="{{ route('movements.store', $id) }}">
             @csrf
             <div class="flex flex-col justify-around">
                 <div class="mt-5">
@@ -29,6 +32,12 @@
                         <option value="increase">Ingreso</option>
                         <option value="decrease" selected>Gasto</option>
                     </select>
+                </div>
+                <div class="mt-5">
+                    <label for="done_date" class="block text-sm font-medium text-gray-700">Fechas</label>
+                    <div class="mt-1">
+                        <input type="datetime-local" name="done_date" id="done_date" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Descripción">
+                    </div>
                 </div>
                 <div class="mt-5">
                     <label for="type" class="block text-sm font-medium text-gray-700">Tipo</label>
@@ -80,7 +89,7 @@
                                     <p class="text-sm text-gray-500">{{ round($move->amount/100,2) }} <a href="#" class="font-medium text-gray-900">{{ $move->description }}</a></p>
                                 </div>
                                 <div class="whitespace-nowrap text-right text-sm text-gray-500">
-                                    <time datetime="2020-09-20">{{ Illuminate\Support\Carbon::parse($move->created_at)->setTimezone('America/Lima')->isoFormat('lll') }}</time>
+                                    <time datetime="2020-09-20">{{ Illuminate\Support\Carbon::parse($move->done_date)->setTimezone('America/Lima')->isoFormat('lll') }}</time>
                                 </div>
                             </div>
                         </div>
@@ -89,39 +98,5 @@
                 @endforeach
             </ul>
         </div>
-        <div class="flow-root bg-white rounded p-10 order-1 xl:order-2 mb-10 xl:mb-0">
-            <div class="pb-10 font-semibold text-xl">
-                Objetivos
-            </div>
-            <div class="overflow-hidden bg-white shadow sm:rounded-md">
-                <ul role="list" class="divide-y divide-gray-200">
-                    <li>
-                        <a href="#" class="block hover:bg-gray-50">
-                            <div class="flex items-center px-4 py-4 sm:px-6">
-                                <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
-                                    <div class="truncate">
-                                        <div class="flex text-sm">
-                                            <p class="truncate font-medium text-indigo-600">Viaje Cuzco</p>
-                                            <p class="ml-1 flex-shrink-0 font-normal text-gray-500">Objetivo S/1200 de S/5000</p>
-                                        </div>
-                                        <div class="mt-2 flex">
-                                            <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 30%"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="ml-5 flex-shrink-0">
-                                    <!-- Heroicon name: mini/chevron-right -->
-                                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
     </div>
-@endsection
+</x-layout>

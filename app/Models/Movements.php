@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Movements extends Model
 {
     use HasFactory;
+
+    public function wallet()
+    {
+        $this->hasOne(Wallets::class);
+    }
 }

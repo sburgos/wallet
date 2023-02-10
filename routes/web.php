@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'auth0.authenticate'], function() {
-    Route::get('/', [\App\Http\Controllers\MovementsController::class, 'all'])->name('home');
+    Route::get('/movements/{walletId}', \App\Http\Controllers\MovementsController::class)->name('movements');
+    Route::post('/movements/{walletId}', [\App\Http\Controllers\MovementsController::class, 'store'])->name('movements.store');
 
-    Route::post('/', \App\Http\Controllers\MovementsController::class)->name('movements.store');
+    Route::get('/', \App\Http\Controllers\WalletsController::class)->name('wallets');
+    Route::post('/', [\App\Http\Controllers\WalletsController::class, 'store'])->name('wallets.store');
 });
 
 Route::get('/login', \Auth0\Laravel\Http\Controller\Stateful\Login::class)->name('login');
